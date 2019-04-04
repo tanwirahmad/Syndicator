@@ -27,7 +27,7 @@ Clicking on the first menu entry brings up a window displaying the last few (rat
 2.  [AppIndicator developer libraries](#appindicator-developer-libraries) for Python
 2.  [ssh access to a server](#ssh-access-to-server-via-public-key-authentication), preferably via public key authentication
 3.  a working installation of [Unison](#unison) on both client and server (version 2.48.3 or later)
-4.  (optional) a working installation of [Back In Time](#back-in-time), or of some other command line backup tool
+4.  ~~(optional) a working installation of [Back In Time](#back-in-time), or of some other command line backup tool~~
 
 Brief details on how to set up 2-4 are included further below.
 
@@ -42,11 +42,10 @@ Syndicator 3 | Python 3 | tested with:  | Ubuntu 18.04 | GNOME | 2.48 | 1.1.24
 
 ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) ! Due to an error in Back in Time versions 1.1.x, Syndicator 3 might synchronize files even when backing up failed. This is not usually a problem in practice, but if you are very sceptical of Unison you might prefer to use Syndicator 2 until this bug has been fixed.  See [issue #3](https://github.com/TentativeConvert/Syndicator/issues/3) for details.
 
-Once you’ve decided on a version, download either the folder [syndicator2](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/TentativeConvert/Syndicator/tree/master/syndicator2) or the folder  [syndicator3](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/TentativeConvert/Syndicator/tree/master/syndicator3).
+Download the folder [syndicator3](https://minhaskamal.github.io/DownGit/#/home?url=https://github.com/tanwirahmad/Syndicator/tree/master/syndicator3).
 
 Open `config.py`and adapt the following lines:
 ```
-backup_command = "backintime --profile-id 2 -b"
 sync_command = "unison XPS12-reh -repeat watch"
 ```
 That is, replace the `2` in the first line with the id of the Back In Time profile that you would like Syndicator to use, and replace `XPS12-reh` by the name of the relevant Unison profile.  The Unison profile should include the following options:
@@ -60,7 +59,6 @@ Alternatively, you can include these flags as command line arguments in the valu
 Finally, make `main.py` executable (if necessary) with `chmod +x main.py`.
 You should now be able to start Syndicator with one of the following commands:
 
-Syndicator 2: call `python main.py` from within the folder syndicator2.<br>
 Syndicator 3: call `python -m syndicator3.main` from the *parent folder* of the folder syndicator3.
 
 The icons used by Syndicator are essentially the UbuntuOne icons delivered with Ubuntu 14.04.  You can change these either by replacing the relevant files in the `icons` folder or by editing `config.py`.  For [at least some of the] icons in `/usr/share/icons/` you only need to supply the file name, not the full path.  
