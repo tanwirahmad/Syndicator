@@ -112,7 +112,10 @@ class Indicator:
         dialog.run()
         dialog.destroy()
     
-    def new_status(self,text,icon=None):
+    def new_status(self, text, icon=None, ignore_empty_text=False):
+        if ignore_empty_text and len(text) == 0:
+            return
+            
         self.status_list_lock.acquire()
         self.status_list.appendleft({'time':time.strftime("%H:%M"),'text':text})
         self.status_list_lock.release()
@@ -168,7 +171,8 @@ class Indicator:
             self.notifytext = ""
         #update icon:
         if self.state == Indicator.STATE_RUNNING:
-            icon_list = string.split(self.icon,",")
+            #icon_list = string.split(self.icon, ",")
+            icon_list = self.icon.split(",")
             no_of_icons = len(icon_list)
             if no_of_icons > 1:
                 self.icon_blink_counter = (self.icon_blink_counter + 1) % no_of_icons
@@ -181,8 +185,10 @@ class Indicator:
             msg = self.status_list[0]
             text = msg['text']
             if len(text) > 50:
-                text = text[:24] + "..." + text[-24:]
-            text = "[" + msg['time'] + "] " + text
+                #text = text[:24] + "..." + text[-24:]
+                text = "{}...{}".format(text[:24],text[-24:])
+            #text = "[" + msg['time'] + "] " + text
+            text = "[{}] {}".format(msg['time'], text)
             self.item_status.get_child().set_text(text)
         self.status_list_lock.release()
         # update list of recently changed files:
@@ -190,7 +196,8 @@ class Indicator:
         while len(self.menu_file_list) < len(self.file_list):
             self.menu_file_list.append(Gtk.MenuItem(''))
         for (menu_item,filename) in zip(self.menu_file_list,self.file_list):
-            menu_item.get_child().set_text("[" + filename['time'] + "] " + filename['text'])
+            #menu_item.get_child().set_text("[" + filename['time'] + "] " + filename['text'])
+            menu_item.get_child().set_text("[{}] {}".format(filename['time'], filename['text']))
         self.file_list_lock.release()
         self.menu_file_list.show_all()
         # update list of recent errors:
@@ -198,7 +205,8 @@ class Indicator:
         while len(self.menu_error_list) < len(self.error_list):
             self.menu_error_list.append(Gtk.MenuItem(''))
         for (menu_item,error) in zip(self.menu_error_list,self.error_list):
-            menu_item.get_child().set_text("[" + error['time'] + "] " + error['text'])
+            #menu_item.get_child().set_text("[" + error['time'] + "] " + error['text'])
+            menu_item.get_child().set_text("[{}] {}".format(error['time'], error['text']))
         self.error_list_lock.release()
         self.menu_error_list.show_all()
 

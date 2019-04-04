@@ -32,6 +32,7 @@ class Syndicator:
         self.thread = None
         self.state_lock = threading.Lock()
         self.state = Syndicator.STATE_PAUSED
+        '''
         self.BackUpProcess = ExternalProcess(
             command=config.backup_command,
             recognized_patterns=config.backup_patterns,
@@ -40,7 +41,8 @@ class Syndicator:
             report_error= self.indicator.new_error,
             report_file = self.indicator.new_file,
             report_notification = self.indicator.new_notification
-        )            
+        )  
+        '''          
         self.SyncProcess = ExternalProcess(
             command=config.sync_command,
             recognized_patterns=config.sync_patterns,
@@ -82,7 +84,7 @@ class Syndicator:
         self.state_lock.acquire()
         self.state = Syndicator.STATE_PAUSED
         self.indicator.pause()
-        self.BackUpProcess.abort()
+        #self.BackUpProcess.abort()
         self.SyncProcess.abort()
         self.state_lock.release()
         
@@ -92,7 +94,19 @@ class Syndicator:
                 print("Syndicator:  The thread for running subprocesses has joined the main thread.")
             self.thread = None 
 
+    def __run(self): # executed in separate thread
+        MIN_WAIT = 2   # two seconds
+        MAX_WAIT = 300 # five minutes
+        wait_time = MIN_WAIT
+        while self.state==Syndicator.STATE_RUNNING: 
+            start_time = time.time()
+            self.SyncProcess.run()
+            elapsed_time = time.time() - start_time
+            wait_time = (2-elapsed_time/100)*wait_time
+            wait_time = min(max(wait_time,MIN_WAIT),MAX_WAIT)
+            self.__count_down(wait_time)
 
+    '''
     def __run(self): # executed in separate thread
         backupsuccess = self.BackUpProcess.run()
         if backupsuccess == 0 or backupsuccess == 1: 
@@ -108,7 +122,7 @@ class Syndicator:
                 wait_time = (2-elapsed_time/100)*wait_time
                 wait_time = min(max(wait_time,MIN_WAIT),MAX_WAIT)
                 self.__count_down(wait_time)
-
+    '''
     def __count_down(self,seconds):
         while seconds > 0 and self.state==Syndicator.STATE_RUNNING:
             seconds = seconds - 1

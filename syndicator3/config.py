@@ -4,7 +4,8 @@
 #backup_command = "/usr/bin/udisksctl mount -b /dev/disk/by-uuid/ae81b5b0-0b83-4f21-a0ea-9b2c370cff04 ; backintime --profile-id 2 -b" # <--- old
 # unfortunately, udisksctl returns an ERROR if disk is already mounted! 
 backup_command = "backintime --profile-id 1 -b"
-sync_command = "pkill -x unison-fsmonito; ssh zibrowius@reh.math.uni-duesseldorf.de pkill -x unison-fsmonito; ~/bin/unison/unison-2.48 Beaver-reh.prf -repeat watch"
+#sync_command = "pkill -x unison-fsmonitor; ssh osboxes@192.168.56.101 pkill -x unison-fsmonitor; unison -repeat watch"
+sync_command = "unison -repeat watch"
 icon_paused = "sync-paused"
 icon_default = "sync-default"
 
@@ -23,33 +24,35 @@ sync_patterns.append({
     'file-text':r"[\2]"})
 sync_patterns.append({
     'pattern':r"(Synchronization complete).* \((\d+[^)]*)\)", 
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\2",
     'icon':ICON_GOOD})
 sync_patterns.append({
-    'pattern':r"Nothing to do: replicas have not changed",
+    'pattern':r"(Nothing to do: replicas have not changed)",
+    'notify-heading':r"\1",
+    'notify-text':r"\1",
     'icon':ICON_GOOD})
 sync_patterns.append({
     'pattern':r"(Fatal error): (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\2",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
 sync_patterns.append({
     'pattern':r"(Error): (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\2",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
 sync_patterns.append({
     'pattern':r"(Error) (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\g<0>",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
 sync_patterns.append({
     'pattern':r"File name too long",
-    'notify_heading':r"Fatal error",
+    'notify-heading':r"Fatal error",
     'notify-text':r"\g<0>",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
@@ -59,19 +62,19 @@ backup_icon_working = "backup1,backup2"
 ICON_ERROR = "sync-error"
 backup_patterns.append({
     'pattern':r"(Fatal error): (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\2",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
 backup_patterns.append({
     'pattern':r"(Error): (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\2",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})
 backup_patterns.append({
     'pattern':r"(Error) (.*)",
-    'notify_heading':r"\1",
+    'notify-heading':r"\1",
     'notify-text':r"\g<0>",
     'error-text':r"\g<0>",
     'icon':ICON_ERROR})

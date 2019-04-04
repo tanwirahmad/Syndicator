@@ -23,8 +23,8 @@ class ExternalProcess():
         print(recognized_patterns[0])
         self.patterns = [MessagePattern(pattern) for pattern in recognized_patterns]
         print("Process -- Recognized messages:")
-        for m in self.patterns:
-            m.show()
+        #for m in self.patterns:
+        #    m.show()
 
     def run(self):
         print("Process:  Starting")
@@ -38,7 +38,7 @@ class ExternalProcess():
                 print("Subprocess has stopped feeding the pipe.")
                 break
             else: 
-                smalllines = [l for ll in line.split('\n')  for l in ll.split('\r')]
+                smalllines = [l for ll in line.split(b'\n')  for l in ll.split(b'\r')]
                 for l in smalllines:
                     print(l.strip())     
                     self.__process_line(l.strip())
@@ -67,7 +67,7 @@ class ExternalProcess():
         if line == "":
             return
         for p in self.patterns:
-            match = p.pattern.match(line)
+            match = p.pattern.match(line.decode("utf-8"))
             if match:
                 print("Process:  Detected match with %s" % str(p.pattern.pattern))
                 status_text = match.expand(p.status_text)
@@ -85,10 +85,11 @@ class ExternalProcess():
                     notify_text = match.expand(p.notify_text)
                     self.report_notification(text=notify_text,heading=notify_heading,icon=icon)
                 return
-        self.report_status(line,self.icon_working)
+        self.report_status(line,self.icon_working, ignore_empty_text=True)
 
 class MessagePattern():
     def __init__(self, array):
+        #print("MEssage", array,'pattern' in array, 'notify-heading' in array, type(array))
         if 'pattern' in array:
             self.pattern = re.compile(array['pattern'],re.I) #re.I means ignore case
         else:
@@ -114,7 +115,7 @@ class MessagePattern():
             self.notify_heading = array['notify-heading']
         if 'icon' in array:
             self.icon = array['icon']
-
+            
     def show(self):
         print(r"""*** PATTERN %s ***
 status-text:    %s
