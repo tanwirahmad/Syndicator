@@ -1,7 +1,7 @@
 # Syndicator
 
 **I have made following changes to the tool:**
-- Removed __back-in-time__ dependency, it was causing problems for some reasons.
+- Removed __back-in-time__ dependency, it was causing problems for some reason.
 - Updated Syndicator3 to support Python 3.6 and few more fixes
 
 Syndicator is a python script providing a "synchronization indicator" for the file synchronzation software [Unison](http://www.cis.upenn.edu/~bcpierce/unison/download/releases/stable/unison-manual.html) on Ubuntu, i.e. a dynamic icon in the Unity panel that indicates the current synchronization state.  
